@@ -1,0 +1,16 @@
+{
+	"discord": {
+		"token": ""
+	},
+	"stormworks": {
+		"lowTPS": 45,
+		"servers": [
+			{
+				"ip": "127.0.0.1",
+				"port": 25565,
+				"messageId": "1234567890123456789",
+				"channelId": "9876543210987654321"
+			}
+		]
+	}
+}

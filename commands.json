@@ -1,0 +1,8 @@
+[
+	{
+		"name": "send",
+		"description": "Send a message with it's ID for the config file!",
+		"type": 1,
+		"default_member_permissions": 0
+	}
+]
