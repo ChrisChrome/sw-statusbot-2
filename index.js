@@ -275,7 +275,7 @@ client.on("ready", async () => {
 				updateStatus(server.ip, server.port, message);
 				setInterval(() => {
 					updateStatus(server.ip, server.port, message);
-				}, 5000);
+				}, 10000);
 			});
 		});
 	});
