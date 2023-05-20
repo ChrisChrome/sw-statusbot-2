@@ -96,6 +96,7 @@ function checkServer(address) {
 
 
 function updateStatus(addr, port, msg) {
+	setTimeout(updateStatus(addr, port, msg), 10000);
 	if (!serverEmbeds[`${addr}:${port}`]) {
 		serverEmbeds[`${addr}:${port}`] = {
 			"title": "Unknown",
@@ -273,9 +274,6 @@ client.on("ready", async () => {
 		client.channels.fetch(server.channelId).then((channel) => {
 			channel.messages.fetch(server.messageId).then((message) => {
 				updateStatus(server.ip, server.port, message);
-				setInterval(() => {
-					updateStatus(server.ip, server.port, message);
-				}, 10000);
 			});
 		});
 	});
