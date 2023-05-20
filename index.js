@@ -194,15 +194,15 @@ function updateStatus(addr, port, msg) {
 			}).then(() => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, edited embed.`);
 				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 15000)
+				}, 10000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
 				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 15000)
+				}, 10000)
 			});
 		} else {
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
@@ -248,15 +248,15 @@ function updateStatus(addr, port, msg) {
 			}).then((msg) => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, edited embed.`);
 				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 15000)
+				}, 10000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
 				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 15000)
+				}, 10000)
 			});
 		}
 	})
