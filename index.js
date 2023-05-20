@@ -223,6 +223,7 @@ function updateStatus(addr, port, msg) {
 				}, 5000)
 				return;
 			}
+			serverStatus[`${addr}:${port}`].status = false;
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
 			// Server is offline, modify embed slightly and edit it
 			data2 = serverStatus[`${addr}:${port}`];
