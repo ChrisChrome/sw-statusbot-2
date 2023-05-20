@@ -96,9 +96,6 @@ function checkServer(address) {
 
 
 function updateStatus(addr, port, msg) {
-	setTimeout(() => {
-		updateStatus(addr, port, msg);
-	}, 10000);
 	if (!serverEmbeds[`${addr}:${port}`]) {
 		serverEmbeds[`${addr}:${port}`] = {
 			"title": "Unknown",
@@ -275,10 +272,15 @@ client.on("ready", async () => {
 	config.stormworks.servers.forEach((server) => {
 		client.channels.fetch(server.channelId).then((channel) => {
 			channel.messages.fetch(server.messageId).then((message) => {
-				updateStatus(server.ip, server.port, message);
+				updateTimers.push(setInterval(() => {
+					updateStatus(server.ip, server.port, message);
+				}))
 			});
 		});
 	});
+	setInterval(() => {
+		console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${updateTimers}`);
+	}, 1000)
 	// client.channels.fetch("1108126926045986856").then((channel) => {
 	// 	channel.messages.fetch("1108860190935232592").then((message) => {
 	// 		message.edit("UwU")
@@ -322,6 +324,7 @@ process.on('SIGINT', async () => {
 
 var serverEmbeds = {};
 var serverStatus = {};
+var updateTimers = [];
 
 console.log(`${colors.cyan("[INFO]")} Starting...`)
 // Start timer to see how long startup takes
