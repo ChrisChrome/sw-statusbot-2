@@ -152,6 +152,15 @@ function updateStatus(addr, port, msg) {
 	console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Checking ${addr}:${port}`);
 	checkServer(`${addr}:${port}`).then((data) => {
 		if (data.status) {
+			// If none of the info has changed, don't edit the embed
+			if (data.name == serverStatus[`${addr}:${port}`].name && data.version == serverStatus[`${addr}:${port}`].version && data.dlc == serverStatus[`${addr}:${port}`].dlc && data.tps == serverStatus[`${addr}:${port}`].tps && data.players == serverStatus[`${addr}:${port}`].players && data.maxPlayers == serverStatus[`${addr}:${port}`].maxPlayers) {
+				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, but nothing has changed.`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
+					updateStatus(addr, port, msg);
+				}, 5000)
+				return;
+			}
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online.`);
 			serverStatus[`${addr}:${port}`] = data;
 			embed = {
@@ -205,6 +214,15 @@ function updateStatus(addr, port, msg) {
 				}, 5000)
 			});
 		} else {
+			// If the server was already offline, don't edit the embed
+			if (!serverStatus[`${addr}:${port}`].status) {
+				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, but was already offline.`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
+					updateStatus(addr, port, msg);
+				}, 5000)
+				return;
+			}
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
 			// Server is offline, modify embed slightly and edit it
 			data2 = serverStatus[`${addr}:${port}`];
