@@ -272,15 +272,13 @@ client.on("ready", async () => {
 	config.stormworks.servers.forEach((server) => {
 		client.channels.fetch(server.channelId).then((channel) => {
 			channel.messages.fetch(server.messageId).then((message) => {
-				updateTimers.push(setInterval(() => {
+				setInterval(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
 					updateStatus(server.ip, server.port, message);
-				}))
+				}, 10000);
 			});
 		});
 	});
-	setInterval(() => {
-		console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${updateTimers}`);
-	}, 1000)
 	// client.channels.fetch("1108126926045986856").then((channel) => {
 	// 	channel.messages.fetch("1108860190935232592").then((message) => {
 	// 		message.edit("UwU")
@@ -324,7 +322,6 @@ process.on('SIGINT', async () => {
 
 var serverEmbeds = {};
 var serverStatus = {};
-var updateTimers = [];
 
 console.log(`${colors.cyan("[INFO]")} Starting...`)
 // Start timer to see how long startup takes
