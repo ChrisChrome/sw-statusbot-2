@@ -193,8 +193,16 @@ function updateStatus(addr, port, msg) {
 				embeds: [embed]
 			}).then(() => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, edited embed.`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					updateStatus(addr, port, msg);
+				}, 15000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					updateStatus(addr, port, msg);
+				}, 15000)
 			});
 		} else {
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
@@ -239,8 +247,16 @@ function updateStatus(addr, port, msg) {
 				"embeds": [serverEmbeds[`${addr}:${port}`]]
 			}).then((msg) => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, edited embed.`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					updateStatus(addr, port, msg);
+				}, 15000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
+				setTimeout(() => {
+					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
+					updateStatus(addr, port, msg);
+				}, 15000)
 			});
 		}
 	})
@@ -282,10 +298,6 @@ client.on("ready", async () => {
 		client.channels.fetch(server.channelId).then((channel) => {
 			channel.messages.fetch(server.messageId).then((message) => {
 				updateStatus(server.ip, server.port, message)
-				setInterval(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
-					updateStatus(server.ip, server.port, message);
-				}, 15000);
 			});
 		});
 	});
