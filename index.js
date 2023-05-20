@@ -191,8 +191,10 @@ function updateStatus(addr, port, msg) {
 			serverEmbeds[`${addr}:${port}`] = embed;
 			msg.edit({
 				embeds: [embed]
+			}).then(() => {
+				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, edited embed.`);
 			}).catch((err) => {
-				console.log(err)
+				console.log(`${colors.red("[ERROR]")} ${err}`);
 			});
 		} else {
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
@@ -235,6 +237,10 @@ function updateStatus(addr, port, msg) {
 			serverEmbeds[`${addr}:${port}`] = embed;
 			msg.edit({
 				"embeds": [serverEmbeds[`${addr}:${port}`]]
+			}).then((msg) => {
+				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, edited embed.`);
+			}).catch((err) => {
+				console.log(`${colors.red("[ERROR]")} ${err}`);
 			});
 		}
 	})
