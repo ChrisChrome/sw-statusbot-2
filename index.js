@@ -196,13 +196,13 @@ function updateStatus(addr, port, msg) {
 				setTimeout(() => {
 					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 10000)
+				}, 5000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
 				setTimeout(() => {
 					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 10000)
+				}, 5000)
 			});
 		} else {
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
@@ -250,13 +250,13 @@ function updateStatus(addr, port, msg) {
 				setTimeout(() => {
 					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 10000)
+				}, 5000)
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
 				setTimeout(() => {
 					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
 					updateStatus(addr, port, msg);
-				}, 10000)
+				}, 5000)
 			});
 		}
 	})
