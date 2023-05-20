@@ -281,10 +281,11 @@ client.on("ready", async () => {
 	config.stormworks.servers.forEach((server) => {
 		client.channels.fetch(server.channelId).then((channel) => {
 			channel.messages.fetch(server.messageId).then((message) => {
+				updateStatus(server.ip, server.port, message)
 				setInterval(() => {
 					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${server.ip}:${server.port}`);
 					updateStatus(server.ip, server.port, message);
-				}, 10000);
+				}, 15000);
 			});
 		});
 	});
