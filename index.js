@@ -149,8 +149,10 @@ function updateStatus(addr, port, msg) {
 			"gameId": "573090"
 		}
 	}
+	console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Checking ${addr}:${port}`);
 	checkServer(`${addr}:${port}`).then((data) => {
 		if (data.status) {
+			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online.`);
 			serverStatus[`${addr}:${port}`] = data;
 			embed = {
 				"title": data.name,
@@ -193,6 +195,7 @@ function updateStatus(addr, port, msg) {
 				console.log(err)
 			});
 		} else {
+			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline.`);
 			// Server is offline, modify embed slightly and edit it
 			data2 = serverStatus[`${addr}:${port}`];
 			embed = {
