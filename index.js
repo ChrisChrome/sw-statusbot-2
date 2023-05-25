@@ -331,21 +331,31 @@ client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 	switch (interaction.commandName) {
 		case "send": // Send a message with it's message ID
-			interaction.channel.send({
-				embeds: [{
-					description: "Please Wait"
-				}]
-			}).then(async (msg) => {
-				await msg.edit({
+			// check if integer 'count' exists, if not, set it to 1
+			if (!interaction.options.getInteger('count')) {
+				count = 1;
+			} else {
+				count = interaction.options.getInteger('count');
+			}
+
+			// Send a message `count` fimes
+			for (i = 0; i < count; i++) {
+				interaction.channel.send({
 					embeds: [{
-						description: `ID: ${msg.id}`
+						description: "Please Wait"
 					}]
+				}).then(async (msg) => {
+					await msg.edit({
+						embeds: [{
+							description: `ID: ${msg.id}`
+						}]
+					});
+					interaction.reply({
+						"ephemeral": true,
+						content: "Done!"
+					})
 				});
-				interaction.reply({
-					"ephemeral": true,
-					content: "Done!"
-				})
-			});
+			}
 			break;
 	}
 });

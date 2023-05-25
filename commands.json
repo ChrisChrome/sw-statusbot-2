@@ -3,6 +3,14 @@
 		"name": "send",
 		"description": "Send a message with it's ID for the config file!",
 		"type": 1,
-		"default_member_permissions": 0
+		"default_member_permissions": 0,
+		"options": [
+			{
+				"name": "count",
+				"description": "Number of messages to send",
+				"type": 4,
+				"required": true
+			}
+		]
 	}
 ]
