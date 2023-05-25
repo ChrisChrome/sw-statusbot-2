@@ -350,12 +350,12 @@ client.on('interactionCreate', async interaction => {
 							description: `ID: ${msg.id}`
 						}]
 					});
-					interaction.reply({
-						"ephemeral": true,
-						content: "Done!"
-					})
 				});
 			}
+			interaction.reply({
+				"ephemeral": true,
+				content: "Done!"
+			})
 			break;
 	}
 });
