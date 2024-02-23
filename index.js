@@ -9,42 +9,85 @@ const client = new Discord.Client({
 });
 const steam = require('steam-server-query');
 
+// Keyword split to version, dlcs, tps
 function splitKeyword(keyword) {
 	data = keyword.split("-")
 	switch (data[1]) {
 		case "0":
-			dlcString = "None",
-				dlcEmoji = ":x:"
+			dlcString = "None"
+			dlcEmoji  = ":x:"
 			break;
 		case "1":
-			dlcString = "Weapons",
-				dlcEmoji = ":gun:"
+			dlcString = "Weapons"
+			dlcEmoji = ":gun:"
 			break;
 		case "2":
-			dlcString = "Arid",
-				dlcEmoji = ":desert:"
+			dlcString = "Arid"
+			dlcEmoji = ":desert:"
 			break;
 		case "3":
-			dlcString = "Both",
-				dlcEmoji = ":gun::desert:"
+			dlcString = "Weapons + Arid"
+			dlcEmoji = ":gun::desert:"
+			break;
+		case "4":
+			dlcString = "Arid + Space"
+			dlcEmoji = ":desert::rocket:"
+			break;
+		case "5":
+			dlcString = "Weapons + Space"
+			dlcEmoji = ":gun::rocket:"
+			break;
+		case "6":
+			dlcString = "Space"
+			dlcEmoji = ":rocket:"
+			break;
+		case "7":
+			dlcString = "Weapons + Arid + Space"
+			dlcEmoji = ":gun::desert::rocket:"
 			break;
 		default:
 			break;
 	}
-	if (data[0] >= "v1.3.0") {
-		return {
-			"version": data[0],
-			dlcString,
-			dlcEmoji,
-			dlc: data[1],
-			"tps": data[2]
-		}
-	} else { // For older versions
-		console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Absolutely ancient server found, ${data}`);
-		return {
-			"version": data[0],
-			"tps": data[1]
-		}
+	// if (data[0] >= "v1.3.0") {
+	// 	return {
+	// 		"version": data[0],
+	// 		dlcString,
+	// 		dlc: data[1],
+	// 		"tps": data[2]
+	// 	}
+	// } else { // For older versions
+	// 	console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Absolutely ancient server found, ${data}`);
+	// 	return {
+	// 		"version": data[0],
+	// 		"tps": data[1]
+	// 	}
+	// }
+	// Lets redo this to actually work with v1.10.0 and above, still gotta check because versions older than 1.3 dont have DLC, and wont have the right number of fields
+	switch (data.length) {
+		case 1:
+			return {
+				"version": data[0]
+			}
+			break;
+		case 2: // Only version and DLC
+			return {
+				"version": data[0],
+				dlcString,
+				dlcEmoji,
+				dlc: data[1]
+			}
+			break;
+		case 3: // Version, DLC and TPS
+			return {
+				"version": data[0],
+				dlcString,
+				dlcEmoji,
+				dlc: data[1],
+				"tps": data[2]
+			}
+			break;
+		default:
+			break;
 	}
 };
 
