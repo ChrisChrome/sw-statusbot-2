@@ -1,6 +1,7 @@
 const config = require('./config.json');
 const colors = require('colors');
 const Discord = require('discord.js');
+const fs = require('fs');
 const rest = new Discord.REST({
 	version: '10'
 }).setToken(config.discord.token);
@@ -15,7 +16,7 @@ function splitKeyword(keyword) {
 	switch (data[1]) {
 		case "0":
 			dlcString = "None"
-			dlcEmoji  = ":x:"
+			dlcEmoji = ":x:"
 			break;
 		case "1":
 			dlcString = "Weapons"
@@ -137,36 +138,43 @@ function checkServer(address) {
 	});
 }
 
+function startTimeout(addr, port, msg) {
+	setTimeout(() => {
+		console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
+		updateStatus(addr, port, msg);
+	}, config.stormworks.updateInterval * 1000);
+}
 
 function updateStatus(addr, port, msg) {
+
 	if (!serverEmbeds[`${addr}:${port}`]) {
 		serverEmbeds[`${addr}:${port}`] = {
 			"title": "Unknown",
 			"fields": [{
-					"name": "Status",
-					"value": `<:lowtps:1108862303618728108>: \`Unknown\``,
-					"inline": true
-				},
-				{
-					"name": "Version",
-					"value": `?`,
-					"inline": true
-				},
-				{
-					"name": "DLC",
-					"value": `?`,
-					"inline": true
-				},
-				{
-					"name": "TPS",
-					"value": `?`,
-					"inline": true
-				},
-				{
-					"name": "Players",
-					"value": `?/?`,
-					"inline": true
-				}
+				"name": "Status",
+				"value": `<:lowtps:1108862303618728108>: \`Unknown\``,
+				"inline": true
+			},
+			{
+				"name": "Version",
+				"value": `?`,
+				"inline": true
+			},
+			{
+				"name": "DLC",
+				"value": `?`,
+				"inline": true
+			},
+			{
+				"name": "TPS",
+				"value": `?`,
+				"inline": true
+			},
+			{
+				"name": "Players",
+				"value": `?/?`,
+				"inline": true
+			}
 			],
 			"color": 0x00ffff,
 			"footer": {
@@ -175,7 +183,7 @@ function updateStatus(addr, port, msg) {
 			"timestamp": new Date()
 		};
 	}
-	if(!serverStatus[`${addr}:${port}`]) {
+	if (!serverStatus[`${addr}:${port}`]) {
 		serverStatus[`${addr}:${port}`] = {
 			"status": false,
 			"error": "Could not connect to server",
@@ -198,10 +206,7 @@ function updateStatus(addr, port, msg) {
 			// If none of the info has changed, don't edit the embed
 			if (data.name == serverStatus[`${addr}:${port}`].name && data.version == serverStatus[`${addr}:${port}`].version && data.dlc == serverStatus[`${addr}:${port}`].dlc && data.tps == serverStatus[`${addr}:${port}`].tps && data.players == serverStatus[`${addr}:${port}`].players && data.maxPlayers == serverStatus[`${addr}:${port}`].maxPlayers) {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, but nothing has changed.`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 				return;
 			}
 			console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online.`);
@@ -209,30 +214,30 @@ function updateStatus(addr, port, msg) {
 			embed = {
 				"title": data.name,
 				"fields": [{
-						"name": "Status",
-						"value": `${data.tps <= config.stormworks.lowTPS ? "<:lowtps:1108862303618728108>: `TPS Low`" : "<:online:1108862127021756457> `Online`"}`,
-						"inline": true
-					},
-					{
-						"name": "Version",
-						"value": `${data.version}`,
-						"inline": true
-					},
-					{
-						"name": "DLC",
-						"value": `${data.dlcEmotes} ${data.dlcString}`,
-						"inline": true
-					},
-					{
-						"name": "TPS",
-						"value": `${data.tps}`,
-						"inline": true
-					},
-					{
-						"name": "Players",
-						"value": `${data.players}/${data.maxPlayers}`,
-						"inline": true
-					}
+					"name": "Status",
+					"value": `${data.tps <= config.stormworks.lowTPS ? "<:lowtps:1108862303618728108>: `TPS Low`" : "<:online:1108862127021756457> `Online`"}`,
+					"inline": true
+				},
+				{
+					"name": "Version",
+					"value": `${data.version}`,
+					"inline": true
+				},
+				{
+					"name": "DLC",
+					"value": `${data.dlcEmotes} ${data.dlcString}`,
+					"inline": true
+				},
+				{
+					"name": "TPS",
+					"value": `${data.tps}`,
+					"inline": true
+				},
+				{
+					"name": "Players",
+					"value": `${data.players}/${data.maxPlayers}`,
+					"inline": true
+				}
 				],
 				"color": data.tps <= config.stormworks.lowTPS ? 0xfff000 : 0x00ff00,
 				"footer": {
@@ -245,25 +250,16 @@ function updateStatus(addr, port, msg) {
 				embeds: [embed]
 			}).then(() => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is online, edited embed.`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 			});
 		} else {
 			// If the server was already offline, don't edit the embed
 			if (!serverStatus[`${addr}:${port}`].status) {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, but was already offline.`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 				return;
 			}
 			serverStatus[`${addr}:${port}`].status = false;
@@ -273,30 +269,30 @@ function updateStatus(addr, port, msg) {
 			embed = {
 				"title": data2.name,
 				"fields": [{
-						"name": "Status",
-						"value": `<:offline:1108862189793726485> \`Offline\``,
-						"inline": true
-					},
-					{
-						"name": "Version",
-						"value": `${data2.version}`,
-						"inline": true
-					},
-					{
-						"name": "DLC",
-						"value": `${data2.dlcEmotes} ${data2.dlcString}`,
-						"inline": true
-					},
-					{
-						"name": "TPS",
-						"value": `0`,
-						"inline": true
-					},
-					{
-						"name": "Players",
-						"value": `0/${data2.maxPlayers}`,
-						"inline": true
-					}
+					"name": "Status",
+					"value": `<:offline:1108862189793726485> \`Offline\``,
+					"inline": true
+				},
+				{
+					"name": "Version",
+					"value": `${data2.version}`,
+					"inline": true
+				},
+				{
+					"name": "DLC",
+					"value": `${data2.dlcEmotes} ${data2.dlcString}`,
+					"inline": true
+				},
+				{
+					"name": "TPS",
+					"value": `0`,
+					"inline": true
+				},
+				{
+					"name": "Players",
+					"value": `0/${data2.maxPlayers}`,
+					"inline": true
+				}
 				],
 				"color": 0xff0000,
 				"footer": {
@@ -309,16 +305,10 @@ function updateStatus(addr, port, msg) {
 				"embeds": [serverEmbeds[`${addr}:${port}`]]
 			}).then((msg) => {
 				console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} ${addr}:${port} is offline, edited embed.`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 			}).catch((err) => {
 				console.log(`${colors.red("[ERROR]")} ${err}`);
-				setTimeout(() => {
-					console.log(`${colors.magenta(`[DEBUG ${new Date()}]`)} Updating ${addr}:${port}`);
-					updateStatus(addr, port, msg);
-				}, 5000)
+				startTimeout(addr, port, msg);
 			});
 		}
 	})
@@ -342,8 +332,8 @@ client.on("ready", async () => {
 				// Register commands
 				await rest.put(
 					Discord.Routes.applicationGuildCommands(client.user.id, guild.id), {
-						body: commands
-					},
+					body: commands
+				},
 				);
 				console.log(`${colors.cyan("[INFO]")} Successfully registered commands for ${colors.green(guild.name)}. Took ${colors.green((Date.now() - gStart) / 1000)} seconds.`);
 			};
@@ -357,11 +347,28 @@ client.on("ready", async () => {
 	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
 
 	config.stormworks.servers.forEach((server) => {
-		client.channels.fetch(server.channelId).then((channel) => {
-			channel.messages.fetch(server.messageId).then((message) => {
-				updateStatus(server.ip, server.port, message)
+		if (!server.channelId) throw new Error("Channel ID not set in config!!!");
+		if (!server.messageId) {
+			// Lets send an empty embed in the channel and update the config file with the message ID. Then write the message ID to the config file
+			client.channels.fetch(server.channelId).then((channel) => {
+				channel.send({
+					embeds: [{
+						description: "Please Wait"
+					}]
+				}).then(async (msg) => {
+					server.messageId = msg.id;
+					fs.writeFileSync("./config.json", JSON.stringify(config, null, "\t"));
+					updateStatus(server.ip, server.port, msg)
+				});
 			});
-		});
+
+		} else {
+			client.channels.fetch(server.channelId).then((channel) => {
+				channel.messages.fetch(server.messageId).then((message) => {
+					updateStatus(server.ip, server.port, message)
+				});
+			});
+		}
 	});
 	// client.channels.fetch("1108126926045986856").then((channel) => {
 	// 	channel.messages.fetch("1108860190935232592").then((message) => {
