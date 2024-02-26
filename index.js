@@ -96,6 +96,7 @@ function splitKeyword(keyword) {
 function checkServer(address) {
 	return new Promise((resolve, reject) => {
 		steam.queryGameServerInfo(address).then(data => {
+			// console.log(data) // Debug stuff
 			data.keywords.split("-")
 			data.address = address.split(":");
 			data.serverInfo = splitKeyword(data.keywords);
